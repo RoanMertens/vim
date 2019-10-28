@@ -25,7 +25,7 @@ call plug#begin('~/.config/plugged')
 " the current color theme
   Plug 'joshdick/onedark.vim'
 
-" adds a way to toggle between one liners and multi line if statements
+" adds a way to togglebetween one liners and multi line if statements
   Plug 'AndrewRadev/splitjoin.vim'
 
 " adds git functionality to vim
@@ -96,8 +96,9 @@ if (empty($TMUX))
 endif
 " have indentation styling enabled on startup
 let g:indent_guides_enable_on_vim_startup = 1
-" set cursorcolumn
-" set cursorline
+let g:indent_guides_auto_colors = 0
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#262626  ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3B4048   ctermbg=4
 
 let g:onedark_terminal_italics = 1
 let g:onedark_hide_endofbuffer = 1
@@ -111,11 +112,11 @@ let g:lightline = {
       \ },
       \ }
 
- "'colorscheme': 'onedark',
 " remove standard mode message (because we use lightline now)
 set noshowmode
 
 syntax on
+
 "Load the color scheme as the last line when it comes to style
 colorscheme onedark
 
