@@ -41,6 +41,9 @@ call plug#begin('~/.config/plugged')
 " adds language packs to vim, example: .rb, .scss, .js, .erb
   Plug 'sheerun/vim-polyglot'
 
+" adds language specific styling errors
+  Plug 'dense-analysis/ale'
+
 " vim plugin for editing rails, example: :A for swithing to and from spec file
   Plug 'tpope/vim-rails'
 
@@ -175,11 +178,29 @@ set hidden
 let g:LanguageClient_serverCommands = { 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'] }
 let g:LanguageClient_autoStop = 0
 
+let g:ale_fix_on_save = 1
+let b:ale_fixers = ['rubocop']
+
+call deoplete#custom#option('sources', {
+\ '_': ['ale', 'solargraph'],
+\})
+
 " Configure ruby omni-completion to use the language client:
 autocmd FileType ruby setlocal omnifunc=LanguageClient#complete
 
-" nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-" Or map each action separately
-" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+" show errors in the statusline 
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))
+
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+
+    return l:counts.total == 0 ? 'OK' : printf(
+    \   '%dW %dE',
+    \   all_non_errors,
+    \   all_errors
+    \)
+endfunction
+
+set statusline=%{LinterStatus()}
+
