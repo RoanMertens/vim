@@ -16,6 +16,9 @@ call plug#begin('~/.config/plugged')
 " file system explorer
   Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
+  "Plug 'Yggdroot/indentLine'
+  Plug 'thaerkh/vim-indentguides'
+
 " shortcuts to toggle/add comments
   Plug 'scrooloose/nerdcommenter'
 
@@ -31,9 +34,6 @@ call plug#begin('~/.config/plugged')
 " adds git functionality to vim
   Plug 'tpope/vim-fugitive'
   Plug 'mhinz/vim-signify'
-
-" visualises the indentation
-  Plug 'nathanaelkane/vim-indent-guides'
 
 " adds the option to have multiple cursors, like in subltext
   Plug 'terryma/vim-multiple-cursors'
@@ -58,7 +58,6 @@ call plug#begin('~/.config/plugged')
 
 call plug#end()
 
-
 " enable mouse
 set mouse=a
 
@@ -74,7 +73,7 @@ map <SPACE> <leader>
 :augroup END
 
 " Change number of spaces that a <Tab> counts for during editing ops
-" set softtabstop=2
+ "set softtabstop=2
 set tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
 
 " Highlight trailing whitespace
@@ -97,12 +96,8 @@ if (empty($TMUX))
     set termguicolors
   endif
 endif
-" have indentation styling enabled on startup
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_auto_colors = 0
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#262626  ctermbg=3
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#3B4048   ctermbg=4
 
+" lightline statusline plugin
 let g:onedark_terminal_italics = 1
 let g:onedark_hide_endofbuffer = 1
 let g:lightline = {
@@ -119,6 +114,14 @@ let g:lightline = {
 set noshowmode
 
 syntax on
+
+if (has("autocmd") && !has("gui_running"))
+  augroup colorset
+    autocmd!
+    let s:white = { "gui": "#142222", "cterm": "145", "cterm16" : "7"}
+    autocmd ColorScheme * call onedark#set_highlight("Normal", { "bg": s:white }) " `bg` will not be styled since there is no `bg` setting
+  augroup END
+endif
 
 "Load the color scheme as the last line when it comes to style
 colorscheme onedark
@@ -144,7 +147,6 @@ autocmd VimEnter * call StartUp()
 
 " close nerdtree when it is the last buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
 
 "CtrlP
 let g:ctrlp_max_files = 0
