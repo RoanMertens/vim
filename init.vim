@@ -115,6 +115,7 @@ set noshowmode
 
 syntax on
 
+"change the gui hex value to change the background color
 if (has("autocmd") && !has("gui_running"))
   augroup colorset
     autocmd!
