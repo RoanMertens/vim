@@ -1,20 +1,23 @@
 " This is the vim initialzer file from R.Mertens.
 " It is my first time creating it from scratch. Please take it easy on me ;)
 
-" plugin installer
+
+
+" ------- Plugin installer(Vim Plug) -------
+
 call plug#begin('~/.config/plugged')
+
+" language servers etc
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" adds language specific styling errors
+  Plug 'dense-analysis/ale'
 
 " control p fuzzy finder
   Plug 'ctrlpvim/ctrlp.vim'
 
-" auto completion framework
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
 " statusline/tabline plugin, dependent on the onedark.vim theme
   Plug 'itchyny/lightline.vim'
-
-" file system explorer
-  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
   "Plug 'Yggdroot/indentLine'
   Plug 'thaerkh/vim-indentguides'
@@ -25,7 +28,10 @@ call plug#begin('~/.config/plugged')
 " adds git functionality to nerdtree
   Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 
-" the current color theme
+" file system explorer
+  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+
+ "the current color theme
   Plug 'joshdick/onedark.vim'
 
 " adds a way to togglebetween one liners and multi line if statements
@@ -38,31 +44,32 @@ call plug#begin('~/.config/plugged')
 " adds the option to have multiple cursors, like in subltext
   Plug 'terryma/vim-multiple-cursors'
 
-" adds language packs to vim, example: .rb, .scss, .js, .erb
-  Plug 'sheerun/vim-polyglot'
-
-" adds language specific styling errors
-  Plug 'dense-analysis/ale'
-
-" vim plugin for editing rails, example: :A for swithing to and from spec file
+" vim plugin for editing rails, example: :A for switching to and from spec file
   Plug 'tpope/vim-rails'
 
 " adds the fast fuzzy finder, use with :Rg searchterm
   Plug 'jremmen/vim-ripgrep'
 
-" add vim solargraph ruby language protocol, in the terminal run the following command for linking with the server: solargraph socket
-  Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-
 call plug#end()
+
+
+
+" ------- Basic settings -------
+
+" enable syntax highlighting
+syntax on
 
 " enable mouse
 set mouse=a
 
 " Mapping leader to space
 map <SPACE> <leader>
+
+" space h to dismiss search result highlighting until next search or press of 'n'
+nmap <silent> <leader>h :noh<CR>
+
+" space comma for running the spec if in specfile
+map <Leader>, :wa\|:!rspec %<CR>
 
 " Turn on line numbers with a hybrid of relative and absolute numbers
 :set number relativenumber
@@ -80,9 +87,16 @@ set tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
 highlight RedundantSpaces term=standout ctermbg=red guibg=red
 match RedundantSpaces /\s\+$\| \+\ze\t/ "\ze sets end of match so only spaces highlighted
 
-" === Bracket settings === "
 " Show matching brackets
 set showmatch
+
+" ways to copy the filepath
+nmap ,cs :let @*=expand("%")<CR>
+nmap ,cl :let @*=expand("%:p")<CR>
+
+
+
+" ------- Ruby on Rails settings -------
 
 " treat scss files as css
 au BufRead,BufNewFile *.scss set filetype=css
@@ -96,6 +110,10 @@ if (empty($TMUX))
     set termguicolors
   endif
 endif
+
+
+
+" ------- Vim theme settings -------
 
 " lightline statusline plugin
 let g:onedark_terminal_italics = 1
@@ -113,8 +131,6 @@ let g:lightline = {
 " remove standard mode message (because we use lightline now)
 set noshowmode
 
-syntax on
-
 "change the gui hex value to change the background color
 if (has("autocmd") && !has("gui_running"))
   augroup colorset
@@ -127,29 +143,22 @@ endif
 "Load the color scheme as the last line when it comes to style
 colorscheme onedark
 
-" === navigation ===
-" using tab to autocomplete :e
-set wildmode=longest,list,full
-set wildmenu
 
-" space h to dismiss search result highlighting until next search or press of 'n'
-nmap <silent> <leader>h :noh<CR>
 
-" nerdtree settings
+" ------- NerdTree -------
+
+" keybindings settings
 map <silent> <Leader>f :NERDTreeFind<CR>
 nmap <silent> <Leader>m :NERDTreeToggle<CR>
-" open nerdtree by default when starting vim
-function! StartUp()
-    if 0 == argc()
-        NERDTree
-    end
-endfunction
-autocmd VimEnter * call StartUp()
 
 " close nerdtree when it is the last buffer
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-"CtrlP
+
+
+" ------- CtrlP -------
+"
+" optimizing the runspeed
 let g:ctrlp_max_files = 0
 let g:ctrlp_max_depth = 40
 let g:ctrlp_clear_cache_on_exit = 0
@@ -163,47 +172,84 @@ if executable('rg')
   let g:ctrlp_use_caching = 0
 endif
 
-" space comma for running the spec if in specfile
-map <Leader>, :wa\|:!rspec %<CR>
 
+" ------- Running language servers with COC -------
 
-" turning on autocmoplete on startup
-let g:deoplete#enable_at_startup = 1
-" map autocomplete to tab
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" the global language servers
+let g:coc_global_extensions = [
+  \ 'coc-pairs',
+  \ 'coc-snippets',
+  \ 'coc-solargraph',
+  \ 'coc-rls',
+  \ 'coc-json'
+  \ ]
 
-" setting up language server for ruby
+" install snippets :CocInstall coc-snippetname
+" edit snippets :CocCommand snippets.editSnippets
 
-" Required for operations modifying multiple buffers like rename.
+" if hidden is not set, TextEdit might fail.
 set hidden
 
-let g:LanguageClient_serverCommands = { 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'] }
-let g:LanguageClient_autoStop = 0
+" Better display for messages
+set cmdheight=2
 
-let g:ale_fix_on_save = 1
-let b:ale_fixers = ['rubocop']
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
 
-call deoplete#custom#option('sources', {
-\ '_': ['ale', 'solargraph'],
-\})
+" always show signcolumns
+set signcolumn=yes
 
-" Configure ruby omni-completion to use the language client:
-autocmd FileType ruby setlocal omnifunc=LanguageClient#complete
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
 
-" show errors in the statusline 
-function! LinterStatus() abort
-    let l:counts = ale#statusline#Count(bufnr(''))
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-    let l:all_errors = l:counts.error + l:counts.style_error
-    let l:all_non_errors = l:counts.total - l:all_errors
-
-    return l:counts.total == 0 ? 'OK' : printf(
-    \   '%dW %dE',
-    \   all_non_errors,
-    \   all_errors
-    \)
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-set statusline=%{LinterStatus()}
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap for rename current word
+nmap <silent> gc <Plug>(coc-rename)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" complete"
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" setting the error line icons"
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+highlight ALEErrorSign guifg=red guibg=none ctermbg=none ctermfg=red
+highlight ALEWarningSign guifg=yellow ctermbg=none ctermfg=yellow
+
+
 
