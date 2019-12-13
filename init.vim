@@ -37,6 +37,9 @@ call plug#begin('~/.config/plugged')
 " adds a way to togglebetween one liners and multi line if statements
   Plug 'AndrewRadev/splitjoin.vim'
 
+" adds sidepanel that shows what is in the register"
+  Plug 'junegunn/vim-peekaboo'
+
 " adds git functionality to vim
   Plug 'tpope/vim-fugitive'
   Plug 'mhinz/vim-signify'
@@ -156,6 +159,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 
 
+" ------- NerdCommenter -------
+let NERDSpaceDelims=1
+
+
 " ------- CtrlP -------
 "
 " optimizing the runspeed
@@ -181,7 +188,17 @@ let g:coc_global_extensions = [
   \ 'coc-snippets',
   \ 'coc-solargraph',
   \ 'coc-rls',
-  \ 'coc-json'
+  \ 'coc-eslint',
+  \ 'coc-prettier',
+  \ 'coc-json',
+  \ 'coc-tsserver',
+  \ 'coc-css',
+  \ 'coc-html',
+  \ 'coc-ember',
+  \ 'coc-git',
+  \ 'coc-svg',
+  \ 'coc-xml',
+  \ 'coc-yaml'
   \ ]
 
 " install snippets :CocInstall coc-snippetname
