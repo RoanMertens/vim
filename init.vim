@@ -25,11 +25,12 @@ call plug#begin('~/.config/plugged')
 " shortcuts to toggle/add comments
   Plug 'scrooloose/nerdcommenter'
 
+" file system explorer
+  Plug 'scrooloose/nerdtree'
+  " Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+
 " adds git functionality to nerdtree
   Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
-
-" file system explorer
-  Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
  "the current color theme
   Plug 'joshdick/onedark.vim'
@@ -200,6 +201,9 @@ let g:coc_global_extensions = [
   \ 'coc-xml',
   \ 'coc-yaml'
   \ ]
+
+" CocInstall coc-snippets coc-solargraph coc-rls coc-eslint coc-prettier coc-json coc-tsserver coc-css coc-html coc-ember coc-git coc-svg coc-xml coc-yaml
+
 
 " install snippets :CocInstall coc-snippetname
 " edit snippets :CocCommand snippets.editSnippets
