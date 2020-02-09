@@ -60,6 +60,9 @@ call plug#end()
 
 " ------- Basic settings -------
 
+" show hidden files by default
+let NERDTreeShowHidden=1
+
 " enable syntax highlighting
 syntax on
 
