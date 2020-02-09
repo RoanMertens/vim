@@ -38,6 +38,12 @@ call plug#begin('~/.config/plugged')
 " adds a way to togglebetween one liners and multi line if statements
   Plug 'AndrewRadev/splitjoin.vim'
 
+" adds a way to switch list items
+  Plug 'AndrewRadev/sideways.vim'
+
+" adds a way to switch list items
+  Plug 'AndrewRadev/switch.vim'
+
 " adds sidepanel that shows what is in the register"
   Plug 'junegunn/vim-peekaboo'
 
@@ -102,6 +108,12 @@ nmap ,cs :let @*=expand("%")<CR>
 nmap ,cl :let @*=expand("%:p")<CR>
 
 
+" ways to switch items in an list
+nmap gB :SidewaysLeft<CR>
+nmap gN :SidewaysRight<CR>
+
+" ways to switch patterns
+" nmap gr :SwitchReverse<CR>
 
 " ------- Ruby on Rails settings -------
 
@@ -250,7 +262,7 @@ nmap <silent> gc <Plug>(coc-rename)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+" nmap <silent> gr <Plug>(coc-references)
 
 " complete"
 inoremap <silent><expr> <c-space> coc#refresh()
