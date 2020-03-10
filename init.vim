@@ -84,6 +84,9 @@ nmap <silent> <leader>h :noh<CR>
 " space comma for running the spec if in specfile
 map <Leader>, :wa\|:!rspec %<CR>
 
+" turn off swap files
+set noswapfile
+
 " Turn on line numbers with a hybrid of relative and absolute numbers
 :set number relativenumber
 :augroup numbertoggle
