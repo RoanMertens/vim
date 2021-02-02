@@ -30,6 +30,9 @@ call plug#begin('~/.config/plugged')
   Plug 'scrooloose/nerdtree'
   " Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
+" nerdtree icons etc
+  Plug 'ryanoasis/vim-devicons'
+
 " adds git functionality to nerdtree
   Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 
@@ -78,9 +81,6 @@ map <SPACE> <leader>
 
 " space h to dismiss search result highlighting until next search or press of 'n'
 nmap <silent> <leader>h :noh<CR>
-
-" space comma for running the spec if in specfile
-map <Leader>, :wa\|:!rspec %<CR>
 
 " turn off swap files
 set noswapfile
@@ -235,5 +235,4 @@ let g:lsc_reference_highlights = v:false
 let g:lsc_trace_level          = 'off'
 set completeopt=menu,menuone,noinsert,noselect
 " let g:lsc_enable_diagnostics = v:true
-
 
