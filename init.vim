@@ -8,7 +8,8 @@
 call plug#begin('~/.config/plugged')
 
 " language servers etc
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'natebosch/vim-lsc'
+  Plug 'ajh17/VimCompletesMe'
 
 " adds language specific styling errors
   Plug 'dense-analysis/ale'
@@ -28,6 +29,9 @@ call plug#begin('~/.config/plugged')
 " file system explorer
   Plug 'scrooloose/nerdtree'
   " Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+
+" nerdtree icons etc
+  Plug 'ryanoasis/vim-devicons'
 
 " adds git functionality to nerdtree
   Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
@@ -50,9 +54,6 @@ call plug#begin('~/.config/plugged')
 " adds git functionality to vim
   Plug 'tpope/vim-fugitive'
   Plug 'mhinz/vim-signify'
-
-" adds the option to have multiple cursors, like in subltext
-  Plug 'terryma/vim-multiple-cursors'
 
 " vim plugin for editing rails, example: :A for switching to and from spec file
   Plug 'tpope/vim-rails'
@@ -80,9 +81,6 @@ map <SPACE> <leader>
 
 " space h to dismiss search result highlighting until next search or press of 'n'
 nmap <silent> <leader>h :noh<CR>
-
-" space comma for running the spec if in specfile
-map <Leader>, :wa\|:!rspec %<CR>
 
 " turn off swap files
 set noswapfile
@@ -199,90 +197,7 @@ if executable('rg')
 endif
 
 
-" ------- Running language servers with COC -------
-
-" the global language servers
-let g:coc_global_extensions = [
-  \ 'coc-pairs',
-  \ 'coc-snippets',
-  \ 'coc-solargraph',
-  \ 'coc-rls',
-  \ 'coc-eslint',
-  \ 'coc-prettier',
-  \ 'coc-json',
-  \ 'coc-tsserver',
-  \ 'coc-css',
-  \ 'coc-html',
-  \ 'coc-ember',
-  \ 'coc-git',
-  \ 'coc-svg',
-  \ 'coc-xml',
-  \ 'coc-yaml'
-  \ ]
-
-" CocInstall coc-snippets coc-solargraph coc-rls coc-eslint coc-prettier coc-json coc-tsserver coc-css coc-html coc-ember coc-git coc-svg coc-xml coc-yaml
-
-
-" install snippets :CocInstall coc-snippetname
-" edit snippets :CocCommand snippets.editSnippets
-
-" if hidden is not set, TextEdit might fail.
-set hidden
-
-" Better display for messages
-set cmdheight=2
-
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
-
-" always show signcolumns
-set signcolumn=yes
-
-" You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
-
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" Remap for rename current word
-nmap <silent> gc <Plug>(coc-rename)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-" nmap <silent> gr <Plug>(coc-references)
-
-" complete"
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+" ------- Ale -------
 
 " setting the error line icons"
 let g:ale_sign_error = '✘'
@@ -291,4 +206,33 @@ highlight ALEErrorSign guifg=red guibg=none ctermbg=none ctermfg=red
 highlight ALEWarningSign guifg=yellow ctermbg=none ctermfg=yellow
 
 
+" ------- LSC server -------
+
+" https://bluz71.github.io/2019/10/16/lsp-in-vim-with-the-lsc-plugin.html
+let g:lsc_server_commands = {
+ \  'ruby': {
+ \    'command': 'solargraph stdio',
+ \    'log_level': -1,
+ \    'suppress_stderr': v:true,
+ \  },
+ \  'javascript': {
+ \    'command': 'typescript-language-server --stdio',
+ \    'log_level': -1,
+ \    'suppress_stderr': v:true,
+ \  }
+ \}
+let g:lsc_auto_map = {
+ \  'GoToDefinition': 'gd',
+ \  'FindReferences': 'gr',
+ \  'Rename': 'gR',
+ \  'ShowHover': 'K',
+ \  'FindCodeActions': 'ga',
+ \  'Completion': 'omnifunc',
+ \}
+let g:lsc_enable_autocomplete  = v:true
+let g:lsc_enable_diagnostics   = v:false
+let g:lsc_reference_highlights = v:false
+let g:lsc_trace_level          = 'off'
+set completeopt=menu,menuone,noinsert,noselect
+" let g:lsc_enable_diagnostics = v:true
 
