@@ -113,6 +113,9 @@ nmap ,cl :let @*=expand("%:p")<CR>
 nmap gB :SidewaysLeft<CR>
 nmap gN :SidewaysRight<CR>
 
+" show buffers
+nmap <leader>b :buffers<CR>
+
 " ways to switch patterns
 " nmap gr :SwitchReverse<CR>
 
