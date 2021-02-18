@@ -26,15 +26,21 @@ call plug#begin('~/.config/plugged')
 " shortcuts to toggle/add comments
   Plug 'scrooloose/nerdcommenter'
 
+" dirvish path navigator & git integration
+  Plug 'justinmk/vim-dirvish'
+  Plug 'kristijanhusak/vim-dirvish-git'
+
 " file system explorer
-  Plug 'scrooloose/nerdtree'
+  " Plug 'scrooloose/nerdtree'
   " Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
-" nerdtree icons etc
-  Plug 'ryanoasis/vim-devicons'
-
 " adds git functionality to nerdtree
-  Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+  " Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+
+" nerdtree icons etc
+  " Plug 'ryanoasis/vim-devicons'
+
+
 
  "the current color theme
   Plug 'joshdick/onedark.vim'
@@ -66,9 +72,6 @@ call plug#end()
 
 
 " ------- Basic settings -------
-
-" show hidden files by default
-let NERDTreeShowHidden=1
 
 " enable syntax highlighting
 syntax on
@@ -168,17 +171,33 @@ colorscheme onedark
 " ------- NerdTree -------
 
 " keybindings settings
-map <silent> <Leader>f :NERDTreeFind<CR>
-nmap <silent> <Leader>m :NERDTreeToggle<CR>
+" map <silent> <Leader>f :NERDTreeFind<CR>
+" nmap <silent> <Leader>m :NERDTreeToggle<CR>
 
 " close nerdtree when it is the last buffer
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+" show hidden files by default
+" let NERDTreeShowHidden=1
 
 
 " ------- NerdCommenter -------
 let NERDSpaceDelims=1
 
+" ------- Dirvish -------
+
+nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+
+augroup dirvish_config
+  autocmd!
+  " Map `t` to open in new tab.
+  autocmd FileType dirvish
+        \  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+        \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+augroup END
+
+set splitbelow
+set splitright
 
 " ------- CtrlP -------
 "
