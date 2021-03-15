@@ -30,18 +30,6 @@ call plug#begin('~/.config/plugged')
   Plug 'justinmk/vim-dirvish'
   Plug 'kristijanhusak/vim-dirvish-git'
 
-" file system explorer
-  " Plug 'scrooloose/nerdtree'
-  " Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-
-" adds git functionality to nerdtree
-  " Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
-
-" nerdtree icons etc
-  " Plug 'ryanoasis/vim-devicons'
-
-
-
  "the current color theme
   Plug 'joshdick/onedark.vim'
 
@@ -166,21 +154,6 @@ endif
 "Load the color scheme as the last line when it comes to style
 colorscheme onedark
 
-
-
-" ------- NerdTree -------
-
-" keybindings settings
-" map <silent> <Leader>f :NERDTreeFind<CR>
-" nmap <silent> <Leader>m :NERDTreeToggle<CR>
-
-" close nerdtree when it is the last buffer
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" show hidden files by default
-" let NERDTreeShowHidden=1
-
-
 " ------- NerdCommenter -------
 let NERDSpaceDelims=1
 
@@ -209,9 +182,10 @@ let g:ctrlp_custom_ignore = '\v[\/](\.git|bower_components|log|node_modules|tmp|
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 map <leader>t :CtrlP<cr>
 map <leader>g :CtrlPModified<cr>
-if executable('rg')
+map <leader>p :CtrlPBuffer<CR>
+if executable('Rg')
   set grepprg=rg\ --color=never
-  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_user_command = 'Rg %s --files --color=never --glob ""'
   let g:ctrlp_use_caching = 0
 endif
 
